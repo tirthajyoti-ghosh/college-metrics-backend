@@ -11,4 +11,12 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/similar/:id', async (req, res) => {
+    try {
+        res.json(await colleges.getSimilarColleges(req.params.id));
+    } catch (err) {
+        console.error('Error', err.message);
+    }
+});
+
 module.exports = router;
