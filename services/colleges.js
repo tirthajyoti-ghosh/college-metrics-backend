@@ -1,7 +1,23 @@
+/* eslint-disable no-underscore-dangle */
+const connectToDatabase = require('../helpers/db');
+
 async function getCollegeDetails(id) {
-    return {
-        data: 'IT WORKS!',
-    };
+    const { College } = await connectToDatabase();
+
+    const college = await College.findById(id, {
+        name: 1,
+        yearFounded: 1,
+        city: 1,
+        state: 1,
+        country: 1,
+        numberOfStudents: 1,
+        courses: 1,
+    }).lean();
+
+    college.id = college._id;
+    delete college._id;
+
+    return college;
 }
 
 async function getSimilarColleges(id) {
