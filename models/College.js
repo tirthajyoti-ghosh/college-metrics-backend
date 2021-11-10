@@ -16,7 +16,7 @@ module.exports = new Schema({
     },
     state: {
         type: String,
-        required: true,
+        required: false,
     },
     country: {
         type: String,
@@ -24,7 +24,8 @@ module.exports = new Schema({
     },
     numberOfStudents: {
         type: Number,
-        required: true,
+        required: false,
+        default: 0,
     },
     courses: {
         type: [String],
