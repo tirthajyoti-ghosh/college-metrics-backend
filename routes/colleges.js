@@ -9,6 +9,7 @@ router.get('/stats', async (req, res) => {
     try {
         res.json(await colleges.getCollegesStats());
     } catch (err) {
+        res.sendStatus(500);
         console.error('Error', err);
     }
 });
@@ -18,6 +19,7 @@ router.get('/:id/similar', async (req, res) => {
     try {
         res.json(await colleges.getSimilarColleges(req.params.id));
     } catch (err) {
+        res.sendStatus(500);
         console.error('Error', err.message);
     }
 });
@@ -27,6 +29,7 @@ router.get('/:id/students', async (req, res) => {
     try {
         res.json(await students.getStudentsByCollege(req.params.id));
     } catch (err) {
+        res.sendStatus(500);
         console.error('Error', err.message);
     }
 });
@@ -36,6 +39,7 @@ router.get('/:id', async (req, res) => {
     try {
         res.json(await colleges.getCollegeDetails(req.params.id));
     } catch (err) {
+        res.sendStatus(500);
         console.error('Error', err.message);
     }
 });

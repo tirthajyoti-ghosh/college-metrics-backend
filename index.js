@@ -26,6 +26,11 @@ app.use((err, req, res, next) => {
     res.status(statusCode).json({ message: err.message });
 });
 
+// The 404 Route (ALWAYS Keep this as the last route)
+app.get('*', (req, res) => {
+    res.status(404).send('The page you are looking for is not there.');
+});
+
 app.listen(port, '0.0.0.0', () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
