@@ -24,7 +24,13 @@ router.get('/list', async (req, res) => {
         } else if (type !== 'country' && type !== 'course') { // 'type' query param must be 'country' or 'course'
             res.status(400).send("Invalid 'type'. Must be 'country' or 'course'.");
         } else {
-            res.json(await colleges.getSpecificColleges(type, value));
+            const result = await colleges.getSpecificColleges(type, value);
+
+            if (result === null) {
+                res.status(404).send('No colleges found.');
+            } else {
+                res.json(result);
+            }
         }
     } catch (err) {
         res.sendStatus(500);
@@ -35,7 +41,13 @@ router.get('/list', async (req, res) => {
 // Get similar colleges by college id
 router.get('/:id/similar', async (req, res) => {
     try {
-        res.json(await colleges.getSimilarColleges(req.params.id));
+        const result = await colleges.getSimilarColleges(req.params.id);
+
+        if (result === null) {
+            res.status(404).send('No similar colleges found.');
+        } else {
+            res.json(result);
+        }
     } catch (err) {
         res.sendStatus(500);
         console.error('Error', err.message);
@@ -45,7 +57,13 @@ router.get('/:id/similar', async (req, res) => {
 // Get students by college id
 router.get('/:id/students', async (req, res) => {
     try {
-        res.json(await students.getStudentsByCollege(req.params.id));
+        const result = await students.getStudentsByCollege(req.params.id);
+
+        if (result === null) {
+            res.status(404).send('No students found for this college.');
+        } else {
+            res.json(result);
+        }
     } catch (err) {
         res.sendStatus(500);
         console.error('Error', err.message);
@@ -55,7 +73,13 @@ router.get('/:id/students', async (req, res) => {
 // Get college details by id
 router.get('/:id', async (req, res) => {
     try {
-        res.json(await colleges.getCollegeDetails(req.params.id));
+        const result = await colleges.getCollegeDetails(req.params.id);
+
+        if (result === null) {
+            res.status(404).send('College not found.');
+        } else {
+            res.json(result);
+        }
     } catch (err) {
         res.sendStatus(500);
         console.error('Error', err.message);

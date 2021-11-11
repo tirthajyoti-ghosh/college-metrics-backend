@@ -2,33 +2,50 @@
 const connectToDatabase = require('../helpers/db');
 
 async function getCollegeDetails(id) {
-    const { College } = await connectToDatabase();
+    try {
+        const { College } = await connectToDatabase();
 
-    const college = await College.findById(id, {
-        name: 1,
-        yearFounded: 1,
-        city: 1,
-        state: 1,
-        country: 1,
-        numberOfStudents: 1,
-        courses: 1,
-    }).lean();
+        const college = await College.findById(id, {
+            name: 1,
+            yearFounded: 1,
+            city: 1,
+            state: 1,
+            country: 1,
+            numberOfStudents: 1,
+            courses: 1,
+        }).lean();
 
-    college.id = college._id;
-    delete college._id;
+        if (!college) {
+            return null;
+        }
 
-    return college;
+        college.id = college._id;
+        delete college._id;
+
+        return college;
+    } catch (error) {
+        return null;
+    }
 }
 
 async function getSimilarColleges(id) {
     const { College } = await connectToDatabase();
 
-    const college = await College.findById(id, {
-        city: 1,
-        state: 1,
-        courses: 1,
-        country: 1,
-    }).lean();
+    let college;
+    try {
+        college = await College.findById(id, {
+            city: 1,
+            state: 1,
+            courses: 1,
+            country: 1,
+        }).lean();
+
+        if (!college) {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
 
     const similarColleges = await College.aggregate([
         {
@@ -56,6 +73,10 @@ async function getSimilarColleges(id) {
             },
         },
     ]);
+
+    if (similarColleges.length === 0) {
+        return null;
+    }
 
     similarColleges.forEach((item) => {
         item.id = item._id;
@@ -136,6 +157,10 @@ async function getSpecificColleges(type, value) {
         colleges = await College.find({ courses: { $in: [value] } }, projections).lean();
     } else {
         colleges = await College.find({ country: value }, projections).lean();
+    }
+
+    if (colleges.length === 0) {
+        return null;
     }
 
     colleges.forEach((item) => {
