@@ -66,8 +66,55 @@ async function getSimilarColleges(id) {
 }
 
 async function getCollegesStats() {
+    const { College } = await connectToDatabase();
+
+    let countryStats;
+    let courseStats;
+
+    const promises = [
+        (async () => {
+            // Inspired by https://stackoverflow.com/a/23116396/11686135
+            const countryStatsData = await College.aggregate([
+                {
+                    $group: {
+                        _id: '$country',
+                        count: { $sum: 1 },
+                    },
+                },
+            ]);
+
+            countryStats = countryStatsData.map((item) => ({
+                country: item._id,
+                count: item.count,
+            }));
+        })(),
+        (async () => {
+            // Inspired by https://stackoverflow.com/a/46445620/11686135
+            const coursesStatsData = await College.aggregate([
+                {
+                    $unwind: {
+                        path: '$courses',
+                    },
+                },
+                {
+                    $group: {
+                        _id: '$courses',
+                        count: { $sum: 1 },
+                    },
+                },
+            ]);
+
+            courseStats = coursesStatsData.map((item) => ({
+                course: item._id,
+                count: item.count,
+            }));
+        })(),
+    ];
+    await Promise.all(promises);
+
     return {
-        data: 'IT WORKS!',
+        countryStats,
+        courseStats,
     };
 }
 

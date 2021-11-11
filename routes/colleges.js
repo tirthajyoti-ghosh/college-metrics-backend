@@ -19,4 +19,12 @@ router.get('/similar/:id', async (req, res) => {
     }
 });
 
+router.get('/stats', async (req, res) => {
+    try {
+        res.json(await colleges.getCollegesStats());
+    } catch (err) {
+        console.error('Error', err);
+    }
+});
+
 module.exports = router;
