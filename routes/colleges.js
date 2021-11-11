@@ -2,16 +2,19 @@ const express = require('express');
 
 const router = express.Router();
 const colleges = require('../services/colleges');
+const students = require('../services/students');
 
-router.get('/details/:id', async (req, res) => {
+// Get colleges stats
+router.get('/stats', async (req, res) => {
     try {
-        res.json(await colleges.getCollegeDetails(req.params.id));
+        res.json(await colleges.getCollegesStats());
     } catch (err) {
-        console.error('Error', err.message);
+        console.error('Error', err);
     }
 });
 
-router.get('/similar/:id', async (req, res) => {
+// Get similar colleges by college id
+router.get('/:id/similar', async (req, res) => {
     try {
         res.json(await colleges.getSimilarColleges(req.params.id));
     } catch (err) {
@@ -19,11 +22,21 @@ router.get('/similar/:id', async (req, res) => {
     }
 });
 
-router.get('/stats', async (req, res) => {
+// Get students by college id
+router.get('/:id/students', async (req, res) => {
     try {
-        res.json(await colleges.getCollegesStats());
+        res.json(await students.getStudentsByCollege(req.params.id));
     } catch (err) {
-        console.error('Error', err);
+        console.error('Error', err.message);
+    }
+});
+
+// Get college details by id
+router.get('/:id', async (req, res) => {
+    try {
+        res.json(await colleges.getCollegeDetails(req.params.id));
+    } catch (err) {
+        console.error('Error', err.message);
     }
 });
 
