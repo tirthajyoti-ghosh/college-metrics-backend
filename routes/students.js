@@ -14,7 +14,7 @@ router.get('/:id', async (req, res) => {
         }
     } catch (err) {
         res.sendStatus(500);
-        console.error('Error', err.message);
+        console.error('Error getting student details', err.message);
     }
 });
 

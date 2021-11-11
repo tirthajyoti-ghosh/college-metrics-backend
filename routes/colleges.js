@@ -10,11 +10,11 @@ router.get('/stats', async (req, res) => {
         res.json(await colleges.getCollegesStats());
     } catch (err) {
         res.sendStatus(500);
-        console.error('Error', err);
+        console.error('Error getting stats', err);
     }
 });
 
-// Get colleges stats
+// Get specific colleges list
 router.get('/list', async (req, res) => {
     try {
         const { type, value } = req.query;
@@ -34,7 +34,7 @@ router.get('/list', async (req, res) => {
         }
     } catch (err) {
         res.sendStatus(500);
-        console.error('Error', err);
+        console.error('Error getting specif list', err);
     }
 });
 
@@ -50,7 +50,7 @@ router.get('/:id/similar', async (req, res) => {
         }
     } catch (err) {
         res.sendStatus(500);
-        console.error('Error', err.message);
+        console.error('Error getting similar colleges', err.message);
     }
 });
 
@@ -66,7 +66,7 @@ router.get('/:id/students', async (req, res) => {
         }
     } catch (err) {
         res.sendStatus(500);
-        console.error('Error', err.message);
+        console.error('Error getting students', err.message);
     }
 });
 
@@ -82,7 +82,7 @@ router.get('/:id', async (req, res) => {
         }
     } catch (err) {
         res.sendStatus(500);
-        console.error('Error', err.message);
+        console.error('Error getting college details', err.message);
     }
 });
 
