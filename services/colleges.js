@@ -118,8 +118,37 @@ async function getCollegesStats() {
     };
 }
 
+async function getSpecificColleges(type, value) {
+    const { College } = await connectToDatabase();
+
+    const projections = {
+        name: 1,
+        yearFounded: 1,
+        city: 1,
+        state: 1,
+        country: 1,
+        numberOfStudents: 1,
+        courses: 1,
+    };
+
+    let colleges;
+    if (type === 'course') {
+        colleges = await College.find({ courses: { $in: [value] } }, projections).lean();
+    } else {
+        colleges = await College.find({ country: value }, projections).lean();
+    }
+
+    colleges.forEach((item) => {
+        item.id = item._id;
+        delete item._id;
+    });
+
+    return colleges;
+}
+
 module.exports = {
     getCollegeDetails,
     getSimilarColleges,
     getCollegesStats,
+    getSpecificColleges,
 };
