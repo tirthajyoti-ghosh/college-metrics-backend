@@ -21,11 +21,9 @@ router.get('/list', async (req, res) => {
 
         if (!type && !value) {
             res.json(await colleges.getAllColleges());
-        }
-        // Both 'type' and 'value' query params need to be specified
-        if (type && !value) {
+        } else if (type && !value) { // Both 'type' and 'value' query params need to be specified
             res.status(400).send("'value' query params must be present.");
-        } else if (!type && value) {
+        } else if (!type && value) { // Both 'type' and 'value' query params need to be specified
             res.status(400).send("'type' query params must be present.");
         } else if (type !== 'country' && type !== 'course') { // 'type' query param must be 'country' or 'course'
             res.status(400).send("Invalid 'type'. Must be 'country' or 'course'.");
