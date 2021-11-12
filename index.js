@@ -1,9 +1,13 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
 const collegeRouter = require('./routes/colleges');
 const studentRouter = require('./routes/students');
+
+// Enable CORS
+app.use(cors());
 
 app.use(express.json());
 app.use(
