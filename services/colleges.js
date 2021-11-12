@@ -171,9 +171,33 @@ async function getSpecificColleges(type, value) {
     return colleges;
 }
 
+async function getAllColleges() {
+    const { College } = await connectToDatabase();
+
+    const projections = {
+        name: 1,
+        yearFounded: 1,
+        city: 1,
+        state: 1,
+        country: 1,
+        numberOfStudents: 1,
+        courses: 1,
+    };
+
+    const colleges = await College.find({}, projections).lean();
+
+    colleges.forEach((item) => {
+        item.id = item._id;
+        delete item._id;
+    });
+
+    return colleges;
+}
+
 module.exports = {
     getCollegeDetails,
     getSimilarColleges,
     getCollegesStats,
     getSpecificColleges,
+    getAllColleges,
 };

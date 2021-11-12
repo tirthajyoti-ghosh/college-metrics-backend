@@ -14,13 +14,19 @@ router.get('/stats', async (req, res) => {
     }
 });
 
-// Get specific colleges list
+// Get colleges list
 router.get('/list', async (req, res) => {
     try {
         const { type, value } = req.query;
 
-        if (!type || !value) { // 'type' and 'value' query params are required
-            res.status(400).send("'type' and 'value' query params must be present.");
+        if (!type && !value) {
+            res.json(await colleges.getAllColleges());
+        }
+        // Both 'type' and 'value' query params need to be specified
+        if (type && !value) {
+            res.status(400).send("'value' query params must be present.");
+        } else if (!type && value) {
+            res.status(400).send("'type' query params must be present.");
         } else if (type !== 'country' && type !== 'course') { // 'type' query param must be 'country' or 'course'
             res.status(400).send("Invalid 'type'. Must be 'country' or 'course'.");
         } else {
