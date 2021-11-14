@@ -1,18 +1,17 @@
 /* eslint-disable no-underscore-dangle */
 const { Types } = require('mongoose');
 const connectToDatabase = require('../helpers/db');
+const { studentProjections } = require('../helpers/general');
 
 async function getStudentsByCollege(collegeId) {
     const { Student } = await connectToDatabase();
     const { ObjectId } = Types;
 
     try {
-        const students = await Student.find({ collegeId: ObjectId(collegeId) }, {
-            name: 1,
-            yearOfBatch: 1,
-            collegeId: 1,
-            skills: 1,
-        }).lean();
+        const students = await Student.find(
+            { collegeId: ObjectId(collegeId) },
+            studentProjections,
+        ).lean();
 
         if (students.length === 0) {
             return null;

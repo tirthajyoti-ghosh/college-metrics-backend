@@ -1,19 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 const connectToDatabase = require('../helpers/db');
+const { collegeProjections } = require('../helpers/general');
 
 async function getCollegeDetails(id) {
     try {
         const { College } = await connectToDatabase();
 
-        const college = await College.findById(id, {
-            name: 1,
-            yearFounded: 1,
-            city: 1,
-            state: 1,
-            country: 1,
-            numberOfStudents: 1,
-            courses: 1,
-        }).lean();
+        const college = await College.findById(id, collegeProjections).lean();
 
         if (!college) {
             return null;
@@ -142,21 +135,11 @@ async function getCollegesStats() {
 async function getSpecificColleges(type, value) {
     const { College } = await connectToDatabase();
 
-    const projections = {
-        name: 1,
-        yearFounded: 1,
-        city: 1,
-        state: 1,
-        country: 1,
-        numberOfStudents: 1,
-        courses: 1,
-    };
-
     let colleges;
     if (type === 'course') {
-        colleges = await College.find({ courses: { $in: [value] } }, projections).lean();
+        colleges = await College.find({ courses: { $in: [value] } }, collegeProjections).lean();
     } else {
-        colleges = await College.find({ country: value }, projections).lean();
+        colleges = await College.find({ country: value }, collegeProjections).lean();
     }
 
     if (colleges.length === 0) {
@@ -174,17 +157,7 @@ async function getSpecificColleges(type, value) {
 async function getAllColleges() {
     const { College } = await connectToDatabase();
 
-    const projections = {
-        name: 1,
-        yearFounded: 1,
-        city: 1,
-        state: 1,
-        country: 1,
-        numberOfStudents: 1,
-        courses: 1,
-    };
-
-    const colleges = await College.find({}, projections).lean();
+    const colleges = await College.find({}, collegeProjections).lean();
 
     colleges.forEach((item) => {
         item.id = item._id;
